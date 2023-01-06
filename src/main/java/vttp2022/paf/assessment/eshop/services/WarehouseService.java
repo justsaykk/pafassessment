@@ -1,7 +1,9 @@
 package vttp2022.paf.assessment.eshop.services;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,11 @@ public class WarehouseService {
 
 	// You cannot change the method's signature
 	// You may add one or more checked exceptions
-	public OrderStatus dispatch(Order order) {
+	public OrderStatus dispatch(Order order) throws URISyntaxException {
 		String orderId = order.getOrderId();
-		String urlString = "http://paf.chuklee.com/dispatch/" + orderId;
+		String urlString = "http://paf.chuklee.com/dispatch/%s".formatted(orderId);
+
+		System.out.println("URL String >> " + urlString);
 
 		// Create JSON Body
 		JsonObjectBuilder lineItemJob = Json.createObjectBuilder();
@@ -57,14 +61,10 @@ public class WarehouseService {
 		return orderStatus;
 	}
 
-	// Helper Method
-	private ResponseEntity<JsonObject> fetch(String url, JsonObject payload) {
+	private ResponseEntity<JsonObject> fetch(String url, JsonObject payload) throws URISyntaxException {
 		RestTemplate template = new RestTemplate();
-		RequestEntity<JsonObject> req = RequestEntity
-				.post(url)
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(payload);
+		URI uri = new URI(url);
+		RequestEntity<JsonObject> req = RequestEntity.post(uri).body(payload);
 		try {
 			ResponseEntity<JsonObject> res = template.exchange(req, JsonObject.class);
 			return res;

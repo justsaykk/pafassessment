@@ -1,5 +1,6 @@
 package vttp2022.paf.assessment.eshop.controllers;
 
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +37,7 @@ public class OrderController {
 
 	@PostMapping(path = "/order")
 	public ResponseEntity<String> postOrder(
-			@RequestBody NewOrder newOrder) {
+			@RequestBody NewOrder newOrder) throws URISyntaxException {
 
 		Optional<Customer> customerOpt = customerRepository.findCustomerByName(newOrder.getName());
 

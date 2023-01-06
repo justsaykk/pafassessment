@@ -12,6 +12,7 @@ import vttp2022.paf.assessment.eshop.services.WarehouseService;
 
 import static vttp2022.paf.assessment.eshop.respositories.Queries.*;
 
+import java.net.URISyntaxException;
 import java.util.Date;
 
 @Repository
@@ -24,7 +25,7 @@ public class OrderRepository {
 	@Autowired
 	private WarehouseService warehouseService;
 
-	public OrderStatus saveOrder(Order order) {
+	public OrderStatus saveOrder(Order order) throws URISyntaxException {
 		System.out.printf(">> Number of Line Items in order: %d\n", order.getLineItems().size());
 		// Save Order
 		String orderid = order.getOrderId();
