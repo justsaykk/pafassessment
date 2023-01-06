@@ -21,4 +21,10 @@ public class Queries {
                         INSERT INTO order_status(orderid, status, status_update) values
                         (?, ?, ?)
                         """;
+        public static final String SQL_FIND_ORDERS_BY_NAME = """
+                        SELECT orders.orderid, orders.name, order_status.status
+                        FROM orders JOIN order_status
+                        ON orders.orderid = order_status.orderid
+                        WHERE name LIKE ?;
+                        """;
 }

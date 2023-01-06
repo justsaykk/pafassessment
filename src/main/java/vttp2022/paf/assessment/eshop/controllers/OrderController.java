@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import vttp2022.paf.assessment.eshop.models.Customer;
+import vttp2022.paf.assessment.eshop.models.CustomerOrders;
 import vttp2022.paf.assessment.eshop.models.NewOrder;
 import vttp2022.paf.assessment.eshop.models.Order;
 import vttp2022.paf.assessment.eshop.models.OrderStatus;
@@ -46,8 +50,6 @@ public class OrderController {
 		}
 
 		// Instantiate new Order class to hold details
-		System.out.println(">> number of line items received " + newOrder.getLineItems().size());
-
 		Order order = new Order();
 		order.setOrderId(UUID.randomUUID()
 				.toString()
@@ -73,5 +75,25 @@ public class OrderController {
 					.build();
 			return new ResponseEntity<String>(jo.toString(), HttpStatus.OK);
 		}
+	}
+
+	@GetMapping(path = "/order/{name}/status")
+	public ResponseEntity<String> getCustomerOrders(
+			@PathVariable(name = "name") String name) {
+		Optional<Customer> customerOpt = customerRepository.findCustomerByName(name);
+		// Check if Customer Name exists in DB
+		if (customerOpt.isEmpty()) {
+			JsonObject jo = Json.createObjectBuilder()
+					.add("error", "Customer %s not found".formatted(name))
+					.build();
+			return new ResponseEntity<String>(jo.toString(), HttpStatus.NOT_FOUND);
+		}
+		CustomerOrders customerOrders = customerRepository.getCustomerOrders(name);
+		JsonObject jo = Json.createObjectBuilder()
+				.add("name", customerOrders.getName())
+				.add("dispatched", customerOrders.getDispatched())
+				.add("pending", customerOrders.getPending())
+				.build();
+		return new ResponseEntity<String>(jo.toString(), HttpStatus.OK);
 	}
 }
