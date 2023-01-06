@@ -1,6 +1,7 @@
-create database eshop;
+use railway;
 
-use eshop;
+drop table if exists customers, orders, order_details, order_status;
+
 
 create table customers
 (
@@ -34,15 +35,27 @@ create table orders
 
 create table order_details
 (
-    id int auto_increment NOT NULL,
-    orderid varchar(8) NOT NULL,
-    item varchar(32) NOT NULL,
-    quantity INTEGER NOT NULL
+    id int
+    auto_increment NOT NULL,
+    orderid varchar
+    (8) NOT NULL,
+    item varchar
+    (32) NOT NULL,
+    quantity INTEGER NOT NULL,
+    
+    primary key
+    (id),
+    FOREIGN KEY
+    (orderid) REFERENCES orders
+    (orderid)
 );
 
-create table order_status (
+    create table order_status (
     orderid varchar(8) NOT NULL,
     delivery_id varchar(128),
     status ENUM('pending', 'dispatched'),
-    status_update TIMESTAMP
+    status_update TIMESTAMP,
+    
+    PRIMARY KEY
+    (orderid)
 );
