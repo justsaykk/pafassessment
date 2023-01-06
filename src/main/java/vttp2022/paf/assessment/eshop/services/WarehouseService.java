@@ -49,7 +49,7 @@ public class WarehouseService {
 		// Setting Order Status
 		OrderStatus orderStatus = new OrderStatus();
 		orderStatus.setOrderId(orderId);
-		if ( null == responseObject || !responseObject.getStatusCode().equals(HttpStatus.OK)) {
+		if (null == responseObject || !responseObject.getStatusCode().equals(HttpStatus.OK)) {
 			return orderStatus;
 		}
 		orderStatus.setDeliveryId(responseObject.getBody().getString("deliveryId"));
@@ -69,7 +69,7 @@ public class WarehouseService {
 			ResponseEntity<JsonObject> res = template.exchange(req, JsonObject.class);
 			return res;
 		} catch (Exception e) {
-			System.err.print(e);
+			System.out.println("Helper Method Error >>" + e.getMessage());
 			return null;
 		}
 	}
